@@ -67,14 +67,14 @@ class IntroductionForm(forms.Form):
         fields=['id','firstpara','secondpara','thirdpara','uploadby','updateDate']
 
 
-class ModeratorForm(forms.Form):
+# class ModeratorForm(forms.Form):
+#     class Meta:
+#         model=Introduction
+#         fields=['username','user','first_name','middle_name','last_name','img','phn_no','address']
+class User_profileForm(forms.Form):
     class Meta:
         model=Introduction
-        fields=['username','user','first_name','middle_name','last_name','img','phn_no','address']
-class AdminForm(forms.Form):
-    class Meta:
-        model=Introduction
-        fields=['username','user','first_name','middle_name','last_name','img','phn_no','address']
+        fields=['userid','username','user','first_name','middle_name','last_name','img','phn_no','post','bio']
 class CostumUserForm(forms.Form):
     class Meta:
         model=CostumUser

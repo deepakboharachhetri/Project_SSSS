@@ -31,8 +31,12 @@ admin.site.register(Social)
 admin.site.register(Achievement)
 # introduction
 admin.site.register(Introduction)
-admin.site.register(Moderator)
-admin.site.register(Admin)
+# admin.site.register(Moderator)
+# admin.site.register(Admin)
 
 
 admin.site.register(CostumUser)
+
+admin.site.register(ProvinceInformation)
+admin.site.register(DistrictInformation)
+admin.site.register(MunicipalityInformation)

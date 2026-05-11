@@ -14,16 +14,16 @@ User=get_user_model()
 
 # Create your views here.
 def index(request):
-   form=HomeSwiper.objects.all().order_by('updateDate')
-   vision=AboutVision.objects.all().order_by('updateDate')[:1]
-   principle=AboutPrinciple.objects.all().order_by('updateDate')[:1]
-   notice=Notice.objects.all().order_by('updateDate')[:5]
-   news=News.objects.all() .order_by('updateDate')[:5]
-   links=Social.objects.all().order_by('updateDate')[:1]
-   Intro=Introduction.objects.all().order_by('updateDate')[:1]
-   contact=Contact.objects.all().order_by('updateDate')[:1]
-   scroller=Notice.objects.all().order_by('updateDate')[:8]
-   achievement=Achievement.objects.all().order_by('updateDate')[:1]
+   form=HomeSwiper.objects.all().filter(status='active').filter(status='active').order_by('updateDate')
+   vision=AboutVision.objects.all().filter(status='active').filter(status='active').order_by('updateDate')[:1]
+   principle=AboutPrinciple.objects.all().filter(status='active').filter(status='active').order_by('updateDate')[:1]
+   notice=Notice.objects.all().filter(status='active').filter(status='active').order_by('updateDate')[:5]
+   news=News.objects.all().filter(status='active') .order_by('updateDate')[:5]
+   links=Social.objects.all().filter(status='active').filter(status='active').order_by('updateDate')[:1]
+   Intro=Introduction.objects.all().filter(status='active').filter(status='active').order_by('updateDate')[:1]
+   contact=Contact.objects.all().filter(status='active').filter(status='active').order_by('updateDate')[:1]
+   scroller=Notice.objects.all().filter(status='active').filter(status='active').order_by('updateDate')[:8]
+   achievement=Achievement.objects.all().filter(status='active').filter(status='active').order_by('updateDate')[:1]
    data={'form':form,
          'vision':vision,
          'principle':principle,
@@ -39,10 +39,10 @@ def index(request):
 
 
 def AboutHist(request):
-   scroller=Notice.objects.all().order_by('updateDate')[:8]
-   links=Social.objects.all().order_by('updateDate')[:1]
-   contact=Contact.objects.all().order_by('updateDate')[:1]
-   history=AboutHistory.objects.all().order_by('updateDate')[:1]
+   scroller=Notice.objects.all().filter(status='active').order_by('updateDate')[:8]
+   links=Social.objects.all().filter(status='active').order_by('updateDate')[:1]
+   contact=Contact.objects.all().filter(status='active').order_by('updateDate')[:1]
+   history=AboutHistory.objects.all().filter(status='active').order_by('updateDate')[:1]
    data={'history':history,
          'contact':contact,
          'links':links,
@@ -52,10 +52,10 @@ def AboutHist(request):
 
 
 def AboutPrincipleMessage(request):
-   scroller=Notice.objects.all().order_by('updateDate')[:8]
-   links=Social.objects.all().order_by('updateDate')[:1]
-   contact=Contact.objects.all().order_by('updateDate')[:1]
-   principle=AboutPrinciple.objects.all().order_by('updateDate')[:1]
+   scroller=Notice.objects.all().filter(status='active').order_by('updateDate')[:8]
+   links=Social.objects.all().filter(status='active').order_by('updateDate')[:1]
+   contact=Contact.objects.all().filter(status='active').order_by('updateDate')[:1]
+   principle=AboutPrinciple.objects.all().filter(status='active').order_by('updateDate')[:1]
    data={'principle':principle,
          'contact':contact,
          'links':links,
@@ -65,10 +65,10 @@ def AboutPrincipleMessage(request):
 
 
 def AboutVisionMission(request):
-      scroller=Notice.objects.all().order_by('updateDate')[:8]
-      links=Social.objects.all().order_by('updateDate')[:1]
-      contact=Contact.objects.all().order_by('updateDate')[:1]
-      vision=AboutVision.objects.all().order_by('updateDate')[:1]
+      scroller=Notice.objects.all().filter(status='active').order_by('updateDate')[:8]
+      links=Social.objects.all().filter(status='active').order_by('updateDate')[:1]
+      contact=Contact.objects.all().filter(status='active').order_by('updateDate')[:1]
+      vision=AboutVision.objects.all().filter(status='active').order_by('updateDate')[:1]
       data={'vision':vision,
             'contact':contact,
             'links':links,
@@ -82,9 +82,9 @@ def AboutVisionMission(request):
 
 
 def contact(request):
-   scroller=Notice.objects.all().order_by('updateDate')[:8]
-   links=Social.objects.all().order_by('updateDate')[:1]
-   contact=Contact.objects.all().order_by('updateDate')[:1]
+   scroller=Notice.objects.all().filter(status='active').order_by('updateDate')[:8]
+   links=Social.objects.all().filter(status='active').order_by('updateDate')[:1]
+   contact=Contact.objects.all().filter(status='active').order_by('updateDate')[:1]
    if(request.method=='POST'):
       form=ViewerContactsForm(request.POST)
       viewer=ViewerContacts()
@@ -102,10 +102,10 @@ def contact(request):
 
 
 def gallery(request):
-   scroller=Notice.objects.all().order_by('updateDate')[:8]
-   links=Social.objects.all().order_by('updateDate')[:1]
-   contact=Contact.objects.all().order_by('updateDate')[:1]
-   gallery=Gallery.objects.all().order_by('updateDate')
+   scroller=Notice.objects.all().filter(status='active').order_by('updateDate')[:8]
+   links=Social.objects.all().filter(status='active').order_by('updateDate')[:1]
+   contact=Contact.objects.all().filter(status='active').order_by('updateDate')[:1]
+   gallery=Gallery.objects.all().filter(status='active').order_by('updateDate')
    data={'gallery':gallery,
          'contact':contact,
          'links':links,
@@ -116,10 +116,10 @@ def gallery(request):
 
 
 def more(request):
-   scroller=Notice.objects.all().order_by('updateDate')[:8]
-   links=Social.objects.all().order_by('updateDate')[:1]
-   contact=Contact.objects.all().order_by('updateDate')[:1]
-   more=MoreDoc.objects.all().order_by('updateDate')
+   scroller=Notice.objects.all().filter(status='active').order_by('updateDate')[:8]
+   links=Social.objects.all().filter(status='active').order_by('updateDate')[:1]
+   contact=Contact.objects.all().filter(status='active').order_by('updateDate')[:1]
+   more=MoreDoc.objects.all().filter(status='active').order_by('updateDate')
    data={'more':more,
          'contact':contact,
          'links':links,
@@ -128,11 +128,11 @@ def more(request):
    return render(request,'more.html',data) 
 
 def notices(request):
-   scroller=Notice.objects.all().order_by('updateDate')[:8]
-   links=Social.objects.all().order_by('updateDate')[:1]
-   contact=Contact.objects.all().order_by('updateDate')[:1]
-   news=News.objects.all().order_by('updateDate')
-   notice=Notice.objects.all().order_by('updateDate')
+   scroller=Notice.objects.all().filter(status='active').order_by('updateDate')[:8]
+   links=Social.objects.all().filter(status='active').order_by('updateDate')[:1]
+   contact=Contact.objects.all().filter(status='active').order_by('updateDate')[:1]
+   news=News.objects.all().filter(status='active').order_by('updateDate')
+   notice=Notice.objects.all().filter(status='active').order_by('updateDate')
    paginator1=Paginator(notice,10)
    paginator2=Paginator(news,10)
    page_number=request.GET.get('page')
@@ -150,9 +150,9 @@ def notices(request):
    return render(request,'notices.html',data) 
 
 def Notice_Open(request,pk):
-   scroller=Notice.objects.all().order_by('updateDate')[:8]
-   links=Social.objects.all().order_by('updateDate')[:1]
-   contact=Contact.objects.all().order_by('updateDate')[:1]
+   scroller=Notice.objects.all().filter(status='active').order_by('updateDate')[:8]
+   links=Social.objects.all().filter(status='active').order_by('updateDate')[:1]
+   contact=Contact.objects.all().filter(status='active').order_by('updateDate')[:1]
    form=Notice.objects.get(id=pk)
    data={'form':form,
          'links':links,
@@ -170,9 +170,9 @@ def Notice_Open(request,pk):
 # admin username
 
 def Admin(request):
-    scroller=Notice.objects.all().order_by('updateDate')[:8]
-    links=Social.objects.all().order_by('updateDate')[:1]
-    contact=Contact.objects.all().order_by('updateDate')[:1]
+    scroller=Notice.objects.all().filter(status='active').order_by('updateDate')[:8]
+    links=Social.objects.all().filter(status='active').order_by('updateDate')[:1]
+    contact=Contact.objects.all().filter(status='active').order_by('updateDate')[:1]
 
     if request.method=='POST':
         
@@ -180,10 +180,18 @@ def Admin(request):
         password=request.POST['password']
         user=authenticate(username=username,password=password)
         if user is not None:
-            login(request,user)
-            
-            messages.success(request,("successfully login"))
-            return redirect('AdminPanelHome')
+            check_status=CostumUser.objects.get(username=username).status
+            if check_status==True:
+               login(request,user)
+               messages.success(request,("successfully login"))
+               return redirect('AdminPanelHome')
+            else:
+               messages.error(request,("Sorry you are not available..."))
+               return render(request,'Admin.html')
+
+
+                
+                
         else:
             messages.error(request,("Invalid User"))
             return render(request,'Admin.html')

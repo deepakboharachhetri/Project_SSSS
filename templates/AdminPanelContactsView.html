@@ -11,7 +11,7 @@
         <table id="gallery_table" class="table">
             <thead>
               <tr class="tr">
-                <th class="text-capitalize text-center col-1" >id</th>
+                <th class="text-capitalize text-center col-1" >SN</th>
                 <th class="text-capitalize text-center col-2" >Full Name</th>
                 <th class="text-capitalize text-center col-2" >Email</th>
                 <th class="text-capitalize text-center col-4" >Message</th>
@@ -26,7 +26,7 @@
               <tr class="tr">
 
                 <td class=" col-1" >
-                  <input type="text"  id="samachar_id"  class="samachar_id text-center" name="samachar_id" value="{{data.id}}" readonly>
+                  <input type="text"  id="samachar_id"  class="samachar_id text-center" name="samachar_id" value="{{forloop.counter}}" readonly>
                 </td>
                 <td class="text-center  col-2" >
                   <input type="text" name="news_title " id="news_title " class="news_title text-center fw-bold" value="{{data.fullname}}" readonly required></td>

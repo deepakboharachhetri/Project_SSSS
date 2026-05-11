@@ -16,7 +16,7 @@
         <table id="table" class="table ">
             <thead>
               <tr>
-                <th class="text-capitalize text-center col-1" scope="col ">Id</th>
+                <th class="text-capitalize text-center col-1" scope="col ">SN</th>
                 <th class="text-capitalize text-center col-2" scope="col-2">title</th>
                 <th class="text-capitalize text-center col-3" scope="col-2">descprition</th>
                 <th class="text-capitalize text-center col-1" scope="col ">Image</th>
@@ -35,9 +35,9 @@
             <tbody id="tbody">
               {% for data in form %}
                 <tr >
-                    <td class="text-center  col-1" scope="col-1">{{data.id}}</td>
+                    <td class="text-center  col-1" scope="col-1">{{forloop.counter}}</td>
                     <td class="text-center text-bold  col-2" scope="">{{data.title}}</td>
-                    <td class="text-center  col-3" scope="col-2">{{data.description}}</td>
+                    <td class="text-center  col-3" scope="col-2"><p>{{data.description}}</p> </td>
                     <td class="text-center  col-1" scope="col-1 "><a href="{{MEDIA_URL}}{{data.file1.url}}">Open file</a></td>
                     {% if data.title2 %}
                     <td class="text-center  col-1" scope="col-1 "><a href="{{MEDIA_URL}}{{data.file2.url}}">{{data.title2}}</a></td>

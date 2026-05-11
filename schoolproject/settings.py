@@ -79,17 +79,22 @@ WSGI_APPLICATION = 'schoolproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#           'ENGINE': 'django.db.backends.mysql',
+#           'NAME':'school',
+#         'USER':'root',
+#         'PASSWORD':'',
+#         'HOST':'localhost',
+#         'PORT':'3306'
+#     }
+# }
 DATABASES = {
     'default': {
-          'ENGINE': 'django.db.backends.mysql',
-          'NAME':'school',
-        'USER':'root',
-        'PASSWORD':'',
-        'HOST':'localhost',
-        'PORT':'3306'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -122,6 +127,7 @@ USE_I18N = True
 USE_TZ = True
 
 
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
 
 STATIC_URL = 'static/'
@@ -131,8 +137,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT=BASE_DIR/'media'
-MEDIA_URL ='/media/'
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 

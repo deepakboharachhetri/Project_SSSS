@@ -16,6 +16,12 @@ urlpatterns = [
      path('AdminPanelHomeSwiperEdit/<int:id>', views.AdminPanelHomeSwiperEdit ,name='AdminPanelHomeSwiperEdit'),
       path('deleteswiper/<int:pk>', views.deleteswiper ,name='deleteswiper'),
 
+    # school achievement
+    path('AdminPanelAchievementView/', views.AdminPanelAchievementView ,name='AdminPanelAchievementView'),
+    path('AdminPanelAchievementAdd/', views.AdminPanelAchievementAdd ,name='AdminPanelAchievementAdd'),
+    path('AdminPanelAchievementEdit/<int:pk>', views.AdminPanelAchievementEdit ,name='AdminPanelAchievementEdit'),
+     path('deleteachievement/<int:pk>', views.deleteachievement ,name='deleteachievement'),
+
 # admin about pages
     path('AdminPanelAboutView/', views.AdminPanelAboutView ,
     name='AdminPanelAboutView'),
@@ -49,10 +55,7 @@ urlpatterns = [
     path('editnotice/<int:pk>', views.AdminPanelNoticeEdit ,name='editnotice'),
 
 
-    # school achievement
-    path('AdminPanelAchievementView/', views.AdminPanelAchievementView ,name='AdminPanelAchievementView'),
-    path('AdminPanelAchievementAdd/', views.AdminPanelAchievementAdd ,name='AdminPanelAchievementAdd'),
-    path('AdminPanelAchievementEdit/<int:pk>', views.AdminPanelAchievementEdit ,name='AdminPanelAchievementEdit'),
+
 
       # admin panel gallery 
 

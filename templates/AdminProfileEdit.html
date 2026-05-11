@@ -6,7 +6,7 @@
 
   <section class="section profile">
 
-    <div class="row">
+    <div class="">
 
       <div class="col-xl-8">
 
@@ -16,7 +16,7 @@
             <ul class="nav nav-tabs nav-tabs-bordered">
 
               <li class="nav-item">
-                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
+                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Edit Profile</button>
               </li>
 
           
@@ -30,7 +30,7 @@
       {% csrf_token %}
       
       {% if form.img == "" or form.img == None %}
-      <div class="mb-3">
+      <div class=" mb-3">
         <div class="px-2">
           <label  class="padding_2_left text-kana required_field" for="gallery_img">Select Image : </label>
           <div id="view_gallery_img" class="d-flex flex-column">
@@ -51,66 +51,91 @@
         </div>
       </div>
       {% endif %}
-
-      <div class="row mb-3">
-        <label for="fullName" class="required_field col-md-4 col-lg-3 col-form-label">First Name</label>
-        <div class="col-md-8 col-lg-9">
+      <div class="name_div d-flex justify-content-between">
+      <div class=" mb-3">
+        <label for="fullName" class="required_field  col-form-label">First Name</label>
           <input name="first_name" type="text" class="form-control" id="fullName" placeholder="Enter first name ?" value="{{form.first_name}}">
-        </div>
+       
       </div>
-      <div class="row mb-3">
-        <label for="middleName" class="col-md-4 col-lg-3 col-form-label">Middle Name</label>
-        <div class="col-md-8 col-lg-9">
+      <div class=" mb-3">
+        <label for="middleName" class=" col-form-label">Middle Name</label>
+        
           <input name="middle_name" type="text" class="form-control" id="middleName" placeholder="" value="{{form.middle_name}}">
-        </div>
+    
       </div>
      
-      <div class="row mb-3">
-        <label for="last_name" class="col-md-4 col-lg-3 col-form-label required_field">Last Name</label>
-        <div class="col-md-8 col-lg-9">
+      <div class=" mb-3">
+        <label for="last_name" class=" col-form-label required_field">Last Name</label>
           <input name="last_name" type="text" class="form-control" id="LastName" placeholder="Enter last name ?"value="{{form.last_name}}">
-        </div>
       </div>
+    </div>
 
       <div class=" mb-3">
-     
-     <div class=" d-flex justify-content-between">
-     <label for="admin_post" class="form-label required_field "> Select Post</label>
-     <select name="admin_post" id="admin_post" class=" form-select panel w-75 "required>
-      {% if form.post %}
-      <option class="text-dark" value="{{form.post}}">{{form.post}}</option>
-      {% else %}
-      <option class="text-dark" value="">select</option>
-      {% endif %}
-      {% for data in arr %}
-      {% if data != form.post %}
-      <option class="text-dark" value="{{data}}">{{data}}</option>
-      {% endif %}
-      {% endfor %}
-    </select>
-  </div>
-      </div>
-
+        <label for="admin_post" class="form-label"> Select Post</label>
+        <select name="admin_post" id="admin_post"  class="form-select w-25 panel text-primary">
+          <option class="text-secondary" value="select">Select</option>
+          <option class="text-dark" value="Teacher">Teacher</option>
+          <option class="text-dark" value="Principle">Principle</option>
+          <option class="text-dark" value="Administrator">Administrator</option>
+        </select>
+          </div>
      
 
-      <div class="row mb-3">
-        <label for="Address" class="col-md-4 col-lg-3 col-form-label required_field">Address</label>
+          <div class="name_div d-flex justify-content-between">
+            <div class=" mb-3">
+              <label for="fullName" class="required_field  col-form-label">Province</label>
+              <select name="admin_post" id="admin_post"  class="form-select  panel text-primary">
+                <option class="text-secondary" value="select">Select</option>
+                <option class="text-dark" value="province-1 ">province-1 </option>
+                <option class="text-dark" value="province-2">province-2</option>
+                <option class="text-dark" value="province-3">province-3</option>
+                <option class="text-dark" value="province-4">province-4</option>
+                <option class="text-dark" value="province-5">province-5</option>
+                <option class="text-dark" value="province-6">province-6</option>
+                <option class="text-dark" value="province-7">province-7</option>
+              </select>
+             
+            </div>
+            <div class=" mb-3">
+              <label for="middleName" class=" col-form-label">District</label>
+              <select name="admin_post" id="admin_post"  class="form-select  panel text-primary">
+                <option class="text-secondary" value="select">Select</option>
+                <option class="text-dark" value="Banke ">Banke </option>
+                <option class="text-dark" value="Arghakhanchi">Arghakhanchi</option>
+                <option class="text-dark" value="Dang">Dang</option>
+                <option class="text-dark" value="Pythan">Pythan</option>
+                <option class="text-dark" value="Chitwan">Chitwan</option>
+                <option class="text-dark" value="Kathmandu">Kathmandu</option>
+                <option class="text-dark" value="Pokhara">Pokhara</option>
+              </select>
+          
+            </div>
+           
+            <div class=" mb-3">
+              <label for="last_name" class=" col-form-label required_field">Municipality/Ghaupalika</label>
+                <input name="last_name" type="text" class="form-control" id="LastName" placeholder="Enter last name ?"value="{{form.last_name}}">
+            </div>
+          </div>
+
+
+      <div class=" mb-3">
+        <label for="Address" class=" col-form-label required_field">Address</label>
         <div class="col-md-8 col-lg-9">
           <input name="address" type="text" class="form-control " id="Address" placeholder="Enter your address ?" value="{{form.address}}">
         </div>
       </div>
 
-      <div class="row mb-3">
-        <label for="Phone" class="col-md-4 col-lg-3 col-form-label required_field">Phone</label>
+      <div class=" mb-3">
+        <label for="Phone" class=" col-form-label required_field">Phone</label>
         <div class="col-md-8 col-lg-9">
-          <input name="phn_no" pattern="[789][0-9]{9}" type="tel" class="form-control " id="Phone" placeholder="Enter phone number ?" value="{{form.phn_no}}">
+          <input name="phn_no" type="text" class="form-control " id="Phone" placeholder="Enter phone number ?" value="{{form.phn_no}}">
         </div>
       </div>
 
-      <div class="row mb-3">
-        <label for="Email" class="col-md-4 col-lg-3 col-form-label required_field">Email</label>
+      <div class=" mb-3">
+        <label for="Email" class=" col-form-label required_field">Email</label>
         <div class="col-md-8 col-lg-9">
-          <input name="gmail" type="email" class="form-control " id="Email" placeholder="Enter your Email ?" value="{{user.email}}">
+          <input name="gmail" type="email" class="form-control " id="Email" placeholder="Enter your Email ?" value="{{form.gmail}}">
         </div>
       </div>
 

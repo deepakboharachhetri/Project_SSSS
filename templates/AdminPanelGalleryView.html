@@ -14,7 +14,7 @@
         <table id="gallery_table" class="table">
             <thead>
               <tr class="tr">
-                <th class="text-capitalize text-center col-1" scope="col-1">id</th>
+                <th class="text-capitalize text-center col-1" scope="col-1">SN</th>
                 <th class="text-capitalize text-center col-5" scope="col-5">Title</th>
                 <th class="text-capitalize text-center col-2" scope="col-2">image</th>
                 <th class="text-capitalize text-center col-2" scope="col-2">upload Date</th>
@@ -32,7 +32,7 @@
               <tr class="tr">
 
                 <td class="  col-1" scope="col ">
-                  <input type="text"  id="gallery_img_id"  class="gallery_img_id text-center" name="gallery_img_id" value="#{{data.id}}" readonly>
+                  <input type="text"  id="gallery_img_id"  class="gallery_img_id text-center" name="gallery_img_id" value="{{forloop.counter}}" readonly>
                 </td>
                 <td class="col " scope="col-5">
                   <input type="text" name="gallery_img_title " id="gallery_img_title " class="gallery_img_title text-center fw-bold" value="{{data.title}}" readonly required></td>

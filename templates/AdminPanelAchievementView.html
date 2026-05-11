@@ -4,17 +4,17 @@
 <div id="costum_home_div"  class="d-flex flex-column w-100 mx-3 mt-3 ">
 
   <h5 class="text-center fw-bold py-3">News View</h5>
-    <div class="select_table border scroll_y100">
+    <div class="select_table border ">
     
         <table id="gallery_table" class="table ">
             <thead>
               <tr class="tr">
                 <th class="text-capitalize text-center col-1" >SN</th>
-                <th class="text-capitalize text-center col-2" >Experiences Year</th>
+                <th class="text-capitalize text-center col-1" >Exps Year</th>
                 <th class="text-capitalize text-center col-2" >Number. teachers</th>
-                <th class="text-capitalize text-center col-2" >Bright stdents</th>
+                <th class="text-capitalize text-center col-2" >Bright students</th>
                 <th class="text-capitalize text-center col-2" >Glorious Alumini</th>
-                <th class="text-capitalize text-center col-1" >Upload Date</th>
+                <th class="text-capitalize text-center col-2" >Upload Date</th>
                 {%  if category == "admin" %}
                 <th class="text-capitalize text-center col-1" >Uploadby</th>
                 {% endif %}
@@ -25,28 +25,35 @@
             <tbody id="tbody">
               {% for data in form  %}
               <tr class="tr">
-                <td class=" col-1 text-center" >
-                  #000{{data.id}}
+                <td class=" col-1 text-center" ><p class="d-flex justify-content-center align-items-center w-100 height_100">
+                  {{forloop.counter}}</p>
                 </td>
 
-                <td class="  text-center col-2" >
-                 {{data.year_of_experiences}} </td>
-                <td class="  text-center col-2" >
-                 {{data.teacher_no}}</td>
-                <td class="  text-center col-2" >{{data.bright_students}}
-                  </td>
-                <td class="  text-center col-2" >
-                  {{data.glorious_alumini}}
+                <td class="  text-center col-2" ><p class="d-flex justify-content-center align-items-center w-100 height_100">
+                 {{data.year_of_experiences}} </p></td>
+                <td class="  text-center col-2" ><p class="d-flex justify-content-center align-items-center w-100 height_100">
+                 {{data.teacher_no}}</td></p>
+                <td class="  text-center col-2" ><p class="d-flex justify-content-center align-items-center w-100 height_100">{{data.bright_students}}
+                  </td></p>
+                <td class="  text-center col-2" ><p class="d-flex justify-content-center align-items-center w-100 height_100">
+                  {{data.glorious_alumini}}</p>
                  </td>
                 <td class="  text-center col-1" >
-                  {{data.updateDate.date}}
+                  {%if data.updateDate %}
+                  <p class="d-flex justify-content-center align-items-center w-100 height_100">
+                  {{data.updateDate.date}}</p>
+                  {% else %}
+                  <p class="d-flex justify-content-center align-items-center w-100 height_100">
+                    {{data.first_upload_date.date}}</p>
+                    {% endif %}
                  </td>
                  {%  if category == "admin" %}
-                 <td class="text-capitalize text-center col-1" >{{data.uploadby}}</td>
+                 <td class="text-capitalize text-center col-1" ><p class="d-flex justify-content-center align-items-center w-100 height_100">{{data.uploadby}}</td></p>
                  {% endif %}
 
                 <td class="table_form_td text-capitalize justify-content-between d-flex gap-1 col-1" >
                   <a href="{% url 'AdminPanelAchievementEdit' data.id %}" id="edit_btn" class=" edit_btn btn btn-white text-primary" type="" ><i class="normal1-hover-effect fs-4 bi bi-pencil-square"></i></a>
+                  <a href="{% url 'deleteachievement' data.id %}" id="delete_btn" type="a" class=" delete_btn btn text-primary btn-white "><span class="bi  bi-x  fs-4 fw-bold normal1-hover-effect"></span></a>
               
                 </td>
               </tr>

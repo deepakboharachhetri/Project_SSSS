@@ -14,6 +14,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.core import exceptions
 import os
+from django.utils import timezone
 # Create your views here.
 
 
@@ -33,7 +34,7 @@ def AdminPanelHome(request):
 # admin swiper 
 @login_required(login_url='/Admin/')
 def AdminPanelHomeSwiperView(request):
-       form=HomeSwiper.objects.all().order_by('position')
+       form=HomeSwiper.objects.all().filter(status='active').order_by('position')
        data={
          'updater':request.user.username,
          'form':form,
@@ -81,19 +82,19 @@ def AdminPanelHomeSwiperEdit(request,id):
        desc=request.POST.get('edit_swiper_description')
        i=request.FILES.get('edit_swiper_image') 
        postimg=HomeSwiper.objects.get(id=id).img
+       
        if type(i)==None:
           i=i
        else:
           i=postimg
-       home=HomeSwiper(
-          id=id,
+       HomeSwiper.objects.filter(id=id).update(
           title=title,
           desc=desc,
           position=int(position),
           img=i,
           uploadby=CostumUser.objects.get(username=request.user.username),
-          updateDate=datetime.datetime.now()    )
-       home.save()
+          updateDate=timezone.now()    )
+
        
        return redirect('AdminPanelHomeSwiperView')
    arr=[1,2,3,4,5,6,7,8,9]
@@ -107,9 +108,11 @@ def AdminPanelHomeSwiperEdit(request,id):
           }
    return render(request,'AdminPanelHomeSwiper.html',data) 
 
+# MyModel.objects.filter(pk=some_value).update(field1='some value')
+
 @login_required(login_url='/Admin/')
 def deleteswiper(request,pk):
-   form=HomeSwiper.objects.get(id=pk)
+   form=HomeSwiper.objects.filter(id=pk)
    form.delete()
    messages.info(request,"Delete successfully")
    return redirect('AdminPanelHomeSwiperView')
@@ -120,7 +123,7 @@ def deleteswiper(request,pk):
 # school achievement
 @login_required(login_url='/Admin/')
 def AdminPanelAchievementView(request):
-   form=Achievement.objects.all().order_by('updateDate')
+   form=Achievement.objects.all().filter(status='active')
    data={
       "form":form,
       "updater":request.user.username,
@@ -131,6 +134,7 @@ def AdminPanelAchievementView(request):
 
 @login_required(login_url='/Admin/')
 def AdminPanelAchievementAdd(request):
+    form_id=Achievement.objects.filter(status='active')
     if(request.method=='POST'):
       form=AchievementForm(request.POST)
       experience_year=request.POST.get('experience_year')
@@ -146,8 +150,13 @@ def AdminPanelAchievementAdd(request):
           uploadby=uploadby
        )
       form.save()
-      messages.info(request,"Successfully Added")
+      messages.info(request,"Add successfully ")
+      form_id=form_id.values_list('id',flat=True)
+      for x in form_id:
+         Achievement.objects.filter(id=x).update(status='inactive',lastDate=timezone.now())
       return redirect('AdminPanelAchievementView')
+    
+      
     data={
        "updater":request.user.username
        
@@ -163,17 +172,17 @@ def AdminPanelAchievementEdit(request,pk):
          teacher_no=request.POST.get('teacher_no')
          bright_students=request.POST.get('bright_students')
          glorious_alumini=request.POST.get('glorious_alumini')
-         form=Achievement(
+         Achievement.objects.filter(id=id).update(
             id=pk,
             year_of_experiences=experience_year,
             teacher_no=teacher_no,
             bright_students=bright_students,
             glorious_alumini=glorious_alumini,
             uploadby=CostumUser.objects.get(username=request.user.username),
-            updateDate=datetime.datetime.now()
+            updateDate=timezone.now()
 
          )
-         form.save()
+         messages.success(request,"Successfully Edit")
          return redirect('AdminPanelAchievementView')
     data={
        "form":frm,
@@ -181,14 +190,81 @@ def AdminPanelAchievementEdit(request,pk):
     }
     return render(request,"AdminPanelAchievement.html",data)
 
+@login_required(login_url='/Admin/')
+def deleteachievement(request,pk):
+   Achievement.objects.filter(id=pk).update(status="inactive")
+   messages.info(request,"Delete successfully")
+   return redirect('AdminPanelAchievementView')
+
+
+# introduction
+@login_required(login_url='/Admin/')
+def AdminPanelIntroductionView(request):
+      Intro=Introduction.objects.all().filter(status='active').order_by('updateDate')[:1]
+      data={
+      'Intro':Intro,
+      "updater":request.user.username,
+      'category':request.user.category,
+
+        }
+      return render(request,"AdminPanelIntroductionView.html",data)
+
+@login_required(login_url='/Admin/')
+def AdminPanelIntroductionEdit(request,id):
+   if(request.method=='POST'):
+      form=IntroductionForm(request.POST)
+      fp=request.POST.get('Introduction-para1')
+      sp=request.POST.get('Introduction-para2')
+      tp=request.POST.get('Introduction-para3')
+      Introduction.objects.filter(id=id).update(
+         firstpara=fp,
+         secondpara=sp,
+         thirdpara=tp,
+         uploadby=CostumUser.objects.get(username=request.user.username),
+         updateDate=timezone.now()
+         )
+      return redirect('AdminPanelIntroductionView')
+   form=Introduction.objects.get(id=id)
+   data={
+      "form":form,
+      "updater":request.user.username
+   }
+   return render(request,'AdminPanelIntroduction.html',data) 
+
+@login_required(login_url='/Admin/')
+def AdminPanelIntroductionAdd(request):
+   form_id=Introduction.objects.filter(status='active')
+   if(request.method=='POST'):
+      form=IntroductionForm(request.POST)
+      fp=request.POST.get('Introduction-para1')
+      sp=request.POST.get('Introduction-para2')
+      tp=request.POST.get('Introduction-para3')
+      Intro=Introduction(
+         firstpara=fp,
+         secondpara=sp,
+         thirdpara=tp,
+         uploadby=CostumUser.objects.get(username=request.user.username),
+         )
+      Intro.save()
+      messages.success(request,"Add successfully")
+      form_id=form_id.values_list('id',flat=True)
+      for x in form_id:
+       Introduction.objects.filter(id=x).update(status='inactive',lastDate=timezone.now()) 
+
+      return redirect('AdminPanelIntroductionView')
+
+   data={
+      "updater":request.user.username
+   }
+   return render(request,'AdminPanelIntroduction.html',data) 
 
 
 # admin panel about
 @login_required(login_url='/Admin/')
 def AdminPanelAboutView(request):
-   vision=AboutVision.objects.all().order_by('updateDate')[:1]
-   principle=AboutPrinciple.objects.all().order_by('updateDate')[:1]
-   history=AboutHistory.objects.all().order_by('updateDate')[:1]
+   vision=AboutVision.objects.all().filter(status='active').order_by('updateDate')[:1]
+   principle=AboutPrinciple.objects.all().filter(status='active').order_by('updateDate')[:1]
+   history=AboutHistory.objects.all().filter(status='active').order_by('updateDate')[:1]
    data={
       'vision':vision,
       'principle':principle,
@@ -208,15 +284,14 @@ def AdminPanelAboutVision(request,vision_id):
       sp=request.POST.get('vision-mission-para2')
       tp=request.POST.get('vision-mission-para3')
       fop=request.POST.get('vision-mission-para4')
-      about=AboutVision(
+      AboutVision.objects.filter(id=vision_id).update(
          auto_increment_id=int(vision_id),
          firstpara=fp,
          secondpara=sp,
          thirdpara=tp,
          fourthpara=fop,
          uploadby=CostumUser.objects.get(username=request.user.username),
-         updateDate=datetime.datetime.now()  )
-      about.save()
+         updateDate=timezone.now()  )
       messages.success(request,'Successfully Edit')
       return redirect('AdminPanelAboutView')
    form=AboutVision.objects.get(auto_increment_id=vision_id)
@@ -229,6 +304,7 @@ def AdminPanelAboutVision(request,vision_id):
 
 @login_required(login_url='/Admin/')
 def AdminPanelAboutVisionAdd(request):
+   form_id=AboutVision.objects.filter(status='active')
    if request.method=='POST':
       fp=request.POST.get('vision-mission-para1')
       sp=request.POST.get('vision-mission-para2')
@@ -240,10 +316,14 @@ def AdminPanelAboutVisionAdd(request):
          thirdpara=tp,
          fourthpara=fop,
          uploadby=CostumUser.objects.get(username=request.user.username), )
-      
       about.save()
-      messages.success(request,'Successfully add')
+      messages.success(request,'Add successfully')
+      
+      form_id=form_id.values_list('id',flat=True)
+      for x in form_id:
+          AboutVision.objects.filter(id=x).update(status='inactive',lastDate=timezone.now())
       return redirect('AdminPanelAboutView')
+   
    data={
       'updater':request.user.username
    }
@@ -271,7 +351,7 @@ def AdminPanelAboutPrinciple(request,p_id):
          about.thirdpara=request.POST.get('principle-para3')
          about.fourthpara=request.POST.get('principle-para4')
          about.uploadby=CostumUser.objects.get(username=request.user.username)
-         about.updateDate=datetime.datetime.now()
+         about.updateDate=timezone.now()
          about.save()
          messages.success(request,'Successfully Update')
          return redirect('AdminPanelAboutView')
@@ -285,6 +365,7 @@ def AdminPanelAboutPrinciple(request,p_id):
 @login_required(login_url='/Admin/')
 def AdminPanelAboutPrincipleAdd(request):
    about=AboutPrincipleForm(request.POST,request.FILES)
+   form_id=Achievement.objects.filter(status='active')
    if(request.method=='POST'):
          about=AboutPrinciple()
          about.img=request.FILES['principle-img']
@@ -297,6 +378,9 @@ def AdminPanelAboutPrincipleAdd(request):
          about.uploadby=CostumUser.objects.get(username=request.user.username)
          about.save()
          messages.success(request,'Successfully Update')
+         form_id=form_id.values_list('id',flat=True)
+         for x in form_id:
+            Achievement.objects.filter(id=x).update(status='inactive',lastDate=timezone.now())
          return redirect('AdminPanelAboutView')
    data={
       'updater':request.user.username
@@ -312,17 +396,16 @@ def AdminPanelAboutHistory(request,history_id):
       sp=request.POST.get('History-para2')
       tp=request.POST.get('History-para3')
       fop=request.POST.get('History-para4')
-      about=AboutHistory(
+      AboutHistory.objects.filter(id=history_id).update(
          auto_increment_id=history_id,
          firstpara=fp,
          secondpara=sp,
          thirdpara=tp,
          fourthpara=fop,
          uploadby=CostumUser.objects.get(username=request.user.username),
-         updateDate=datetime.datetime.now()
+         updateDate=timezone.now()
          )
       messages.success(request,'Successfully Edit')
-      about.save()
       return redirect('AdminPanelAboutView')
    form=AboutHistory.objects.get(auto_increment_id=history_id)
    data={
@@ -333,6 +416,7 @@ def AdminPanelAboutHistory(request,history_id):
 
 @login_required(login_url='/Admin/')
 def AdminPanelAboutHistoryAdd(request):
+   form_id=AboutHistory.objects.filter(status='active')
    if(request.method=='POST'):
       form=AboutHistoryForm(request.POST)
       fp=request.POST.get('History-para1')
@@ -347,74 +431,15 @@ def AdminPanelAboutHistoryAdd(request):
          uploadby=CostumUser.objects.get(username=request.user.username),
          )
       about.save()
-      messages.success(request,'Successfully Add')
+      messages.success(request,'Add successfully ')
+      form_id=form_id.values_list('id',flat=True)
+      for x in form_id:
+         AboutHistory.objects.filter(id=x).update(status='inactive',lastDate=timezone.now())
       return redirect('AdminPanelAboutView')
    data={
       'updater':request.user.username
    }
    return render(request,'AdminPanelAboutHistory.html',data) 
-
-
-# introduction
-@login_required(login_url='/Admin/')
-def AdminPanelIntroductionView(request):
-      Intro=Introduction.objects.all().order_by('updateDate')[:1]
-      data={
-      'Intro':Intro,
-      "updater":request.user.username,
-      'category':request.user.category,
-
-        }
-      return render(request,"AdminPanelIntroductionView.html",data)
-
-@login_required(login_url='/Admin/')
-def AdminPanelIntroductionEdit(request,id):
-   if(request.method=='POST'):
-      form=IntroductionForm(request.POST)
-      fp=request.POST.get('Introduction-para1')
-      sp=request.POST.get('Introduction-para2')
-      tp=request.POST.get('Introduction-para3')
-      Intro=Introduction(
-         id=id,
-         firstpara=fp,
-         secondpara=sp,
-         thirdpara=tp,
-         uploadby=CostumUser.objects.get(username=request.user.username),
-         updateDate=datetime.datetime.now()
-         )
-      Intro.save()
-      return redirect('AdminPanelIntroductionView')
-   form=Introduction.objects.get(id=id)
-   data={
-      "form":form,
-      "updater":request.user.username
-   }
-   return render(request,'AdminPanelIntroduction.html',data) 
-
-@login_required(login_url='/Admin/')
-def AdminPanelIntroductionAdd(request):
-   if(request.method=='POST'):
-      form=IntroductionForm(request.POST)
-      fp=request.POST.get('Introduction-para1')
-      sp=request.POST.get('Introduction-para2')
-      tp=request.POST.get('Introduction-para3')
-      Intro=Introduction(
-         firstpara=fp,
-         secondpara=sp,
-         thirdpara=tp,
-         uploadby=CostumUser.objects.get(username=request.user.username),
-         )
-      Intro.save()
-      return redirect('AdminPanelIntroductionView')
-
-   data={
-      "updater":request.user.username
-   }
-   return render(request,'AdminPanelIntroduction.html',data) 
-
-
-
-
 # admin panel admisiion
 # @login_required(login_url='/Admin/')
 # def AdminPanelAdmission(request):
@@ -452,7 +477,7 @@ def AdminPanelNoticeAdd(request):
 
 @login_required(login_url='/Admin/')
 def AdminPanelNoticeView(request):
-   form=Notice.objects.all().order_by('updateDate')
+   form=Notice.objects.all().filter(status='active').order_by('updateDate')
    data={
       'updater':request.user.username,
       "form":form,
@@ -467,18 +492,16 @@ def AdminPanelNoticeEdit(request,pk):
    frm=form
    if(request.method=='POST'):
       form=NoticeForm(request.POST,request.FILES)
-      form=Notice()
-
-      form.title=request.POST.get('notice_files_title')
-      form.description=request.POST.get('notice_files_description')
-      form.file1=request.FILES.get('notice_img')
-      form.title2=request.POST.get('notice_file_title1')
-      form.file2=request.FILES.get('notice_file1')
-      form.title3=request.POST.get('notice_file_title2')
-      form.file3=request.FILES.get('notice_file2')
-      form.uploadby=CostumUser.objects.get(username=request.user.username)
-      form.updateDate=datetime.datetime.now()
-      form.save()
+      Notice.objects.filter(id=pk).update(
+      title=request.POST.get('notice_files_title'),
+      description=request.POST.get('notice_files_description'),
+      file1=request.FILES.get('notice_img'),
+      title2=request.POST.get('notice_file_title1'),
+      file2=request.FILES.get('notice_file1'),
+      title3=request.POST.get('notice_file_title2'),
+      file3=request.FILES.get('notice_file2'),
+      uploadby=CostumUser.objects.get(username=request.user.username),
+      updateDate=timezone.now())
       return redirect("AdminPanelNoticeView")
 
    data={
@@ -489,8 +512,7 @@ def AdminPanelNoticeEdit(request,pk):
 
 @login_required(login_url='/Admin/')
 def deletenotice(request,pk):
-   form=Notice.objects.get(id=pk)
-   form.delete()
+   Notice.objects.filter(id=pk).update(status='inactive')
    messages.info(request,"Delete successfully")
    return redirect('AdminPanelNoticeView')
 
@@ -519,7 +541,7 @@ def AdminPanelNewsAdd(request):
 
 @login_required(login_url='/Admin/')
 def AdminPanelNewsView(request):
-   form=News.objects.all().order_by('updateDate')
+   form=News.objects.all().filter(status='active').order_by('updateDate')
    data={
       'category':request.user.category,
       'updater':request.user.username,"form":form,}
@@ -535,7 +557,7 @@ def AdminPanelNewsEdit(request,pk):
          form.link=request.POST.get('samachar_url')
          form.uploadby=CostumUser.objects.get(username=request.user.username),
       
-         form.updateDate=datetime.datetime.now()
+         form.updateDate=timezone.now()
          form.save()
          return redirect('AdminPanelNewsView')
     data={
@@ -546,8 +568,7 @@ def AdminPanelNewsEdit(request,pk):
 
 @login_required(login_url='/Admin/')
 def deletenews(request,pk):
-   form=News.objects.get(id=pk)
-   form.delete()
+   News.objects.filter(id=pk).update(status='inactive')
    messages.info(request,"Delete successfully")
    return redirect('AdminPanelNewsView')
   
@@ -555,7 +576,7 @@ def deletenews(request,pk):
 # admin panel gallery
 @login_required(login_url='/Admin/')
 def AdminPanelGalleryView(request):
-   form= Gallery.objects.all().order_by('updateDate')
+   form= Gallery.objects.all().filter(status='active').order_by('updateDate')
    data={
       'category':request.user.category,
       'updater':request.user.username,"form":form
@@ -595,7 +616,7 @@ def AdminPanelGalleryEdit(request,pk):
          form.title=request.POST.get('gallery_img_title')
          form.img=request.FILES.get('gallery_img')
          form.uploadby=CostumUser.objects.get(username=request.user.username),
-         form.updateDate=datetime.datetime.now()
+         form.updateDate=timezone.now()
          form.save()
          return redirect('AdminPanelGalleryView')
    
@@ -636,7 +657,7 @@ def AdminPanelMoreAdd(request):
 
 @login_required(login_url='/Admin/')
 def AdminPanelMoreView(request):
-   form=MoreDoc.objects.all().order_by('updateDate')
+   form=MoreDoc.objects.all().filter(status='active').order_by('updateDate')
       
    data={
       'category':request.user.category,
@@ -663,7 +684,7 @@ def AdminPanelMoreEdit(request,pk):
             form.file=file
          form.uploadby=CostumUser.objects.get(username=request.user.username),
       
-         form.updateDate=datetime.datetime.now()
+         form.updateDate=timezone.now()
          form.save()
          return redirect('AdminPanelMoreView')
     data={
@@ -674,8 +695,7 @@ def AdminPanelMoreEdit(request,pk):
 
 @login_required(login_url='/Admin/')
 def deletemore(request,pk):
-   form=MoreDoc.objects.get(id=pk)
-   form.delete()
+   MoreDoc.objects.filter(id=pk).update(status='inactive')
    messages.info(request,"Delete successfully")
    return redirect('AdminPanelMoreView')
 
@@ -684,8 +704,8 @@ def deletemore(request,pk):
 # admin panel contact
 @login_required(login_url='/Admin/')
 def AdminPanelContactLinkView(request):
-   contact=Contact.objects.all().order_by('updateDate')[:1]
-   social=Social.objects.all().order_by('updateDate')[:1]
+   contact=Contact.objects.all().filter(status='active').order_by('updateDate')[:1]
+   social=Social.objects.all().filter(status='active').order_by('updateDate')[:1]
    data={
       'contact':contact,
       'social':social,
@@ -722,7 +742,7 @@ def AdminPanelContactEdit(request,pk):
          gmail=request.POST.get('gmail_api'),
          phn_no=request.POST.get('phn_no'),
          uploadby=CostumUser.objects.get(username=request.user.username),
-         updateDate=datetime.datetime.now()  )
+         updateDate=timezone.now()  )
       contact.save()
       return redirect('AdminPanelContactLinkView')
    form=Contact.objects.get(id=pk)
@@ -757,7 +777,7 @@ def AdminPanelSocialEdit(request,pk):
       social.twitter=request.POST.get('twitter_link')
       social.linkedin=request.POST.get('linkedin_link')
       social.uploadby=CostumUser.objects.get(username=request.user.username),
-      social.updateDate=datetime.datetime.now()
+      social.updateDate=timezone.now()
       social.save()
       return redirect('AdminPanelContactLinkView')
    
@@ -773,117 +793,45 @@ def AdminPanelSocialEdit(request,pk):
 # contact form view
 @login_required(login_url='/Admin/')
 def AdminPanelContactsView(request):
-   form=ViewerContacts.objects.all()
+   form=ViewerContacts.objects.all().filter(status='active')
    return render (request,'AdminPanelContactsView.html',{'updater':request.user.username,"form":form})
 
 # admin profile
 @login_required(login_url='/Admin/')
 def AdminProfile(request):
-   form=Admin()
-   if request.user.category == "admin":
-      try:
-        form=Admin.objects.get(username=request.user.username)
-        
-      except form.DoesNotExist:
-          form = None
-   elif request.user.category == "moderator":
-      try:
-        form=Moderator.objects.get(username=request.user.username)
-      except form.DoesNotExist:
-          form = None
-
-   Mode=Moderator()
+   form=""
    try:
-        Mode=Moderator.objects.all()
-   except Mode.DoesNotExist:
-          Mode = None
-   user=CostumUser.objects.get(username=request.user.username)  
+      form=User_profile.objects.get(username=request.user.username)
+      
+   except Exception:
+      messages.info(request,'sorry you doesnot have profile')
+      return redirect('AdminProfileAdd')
    data={
       "updater":request.user.username,
       "category":request.user.category,
       'form':form,
-      'mode':Mode,
-      'user':user
    }
    return render(request,'AdminProfile.html',data)
 
 
 @login_required(login_url='/Admin/')
 def AdminProfileEdit(request,pk):
-   form=AdminForm(request.POST,request.FILES)
-   form2=ModeratorForm(request.POST,request.FILES)
-   category=request.user.category
-   if(request.method=='POST'):
-      if category=='admin':
-         form=Admin.objects.get(username=pk)
-         if len(request.FILES) !=0:
-               if len(str(form.img)) >0:
-                  os.remove(form.img.path)
-               form.first_name=request.POST.get('first_name')
-               form.middle_name=request.POST.get('middle_name')
-               form.last_name=request.POST.get('last_name')
-               form.post=request.POST.get('admin_post')
-               form.img=request.FILES.get('gallery_img')
-               form.address=request.POST.get('address')
-               form.phn_no=request.POST.get('phn_no')
-               form.address=request.POST.get('address')
-               form.save()
-               email=request.POST.get('gmail')
-               CostumUser.objects.filter(username=request.user.username).update(email=email)
-               messages.success(request,"Successfully updated")
-               return redirect('AdminProfile')
-      elif category=='moderator':
-           form2=Moderator.objects.get(username=pk)
-           if len(request.FILES) !=0:
-               if len(str(form2.img)) >0:
-                  os.remove(form2.img.path)
-               form2.first_name=request.POST.get('first_name')
-               form2.middle_name=request.POST.get('middle_name')
-               form2.last_name=request.POST.get('last_name')
-               form2.username=request.user.username
-               form2.post=request.POST.get('admin_post')
-               form2.img=request.FILES.get('gallery_img')
-               form2.address=request.POST.get('address')
-               form2.phn_no=request.POST.get('phn_no')
-               form2.address=request.POST.get('address')
-               form2.user=CostumUser.objects.get(username=request.user.username)
-               form2.save()
-               email=request.POST.get('gmail')
-               CostumUser.objects.filter(username=request.user.username).update(email=email)
-               messages.success(request,"Successfully updated")
-               return redirect('AdminProfile')
-   
-   arr=['Administrator','Teacher','Principle']
-   if category==request.user.username:
-      form=Admin.objects.get(username=request.user.username)
-   elif category==request.user.username:
-      form=Moderator.objects.get(username=request.user.username)
-   user=CostumUser.objects.get(username=request.user.username)
-   data={
-      "updater":request.user.username,
-      "category":request.user.category,
-      'form':form,
-      'arr':arr,
-      'user':user,
-   }
-   return render(request,'AdminProfileEdit.html',data)
+   return render(request,'AdminProfileEdit.html')
 
 
 @login_required(login_url='/Admin/')
 def AdminProfileAdd(request):
-   form=AdminForm(request.POST,request.FILES)
+   form=User_profileForm(request.POST,request.FILES)
    if(request.method == 'POST'):
-            form=Admin()
             form.username=request.user.username
-            form.user=CostumUser.objects.get(username=request.user.username)
+            form.userid=CostumUser.objects.get(username=request.user.username).userid
+            form=User_profile()
             form.first_name=request.POST.get('first_name')
             form.middle_name=request.POST.get('middle_name')
             form.last_name=request.POST.get('last_name')
             form.post=request.POST.get('admin_post')
             form.img=request.FILES.get('gallery_img')
-            form.address=request.POST.get('address')
             form.phn_no=request.POST.get('phn_no')
-            form.address=request.POST.get('address')
             form.save()
             messages.success(request,'Successfully Update')
             return redirect('AdminProfile') 
@@ -900,73 +848,14 @@ def AdminProfileAdd(request):
 
 @login_required(login_url='/Admin/')
 def AdminNewModeratorAdd(request):
-   form=Moderator(request.POST,request.FILES)
-   user=CostumUserForm(request.POST)
-   if request.method =='POST':
-      user=CostumUser()
-      username=request.POST.get('moderator_username')
-      user.username=username
-      user.category='moderator'
-      user.email=request.POST.get('gmail')
-      user.set_password=request.POST.get('password')
-      user.save()
-      form=Moderator()
-      form.username=username
-      form.user=CostumUser.objects.get(username=username)
-      form.first_name=request.POST.get('first_name')
-      form.middle_name=request.POST.get('middle_name')
-      form.last_name=request.POST.get('last_name')
-      form.post=request.POST.get('admin_post')
-      form.img=request.FILES.get('gallery_img')
-      form.address=request.POST.get('address')
-      form.phn_no=request.POST.get('phn_no')
-      form.address=request.POST.get('address')
-      form.save()
-      messages.success(request,'Successfully create new moderator')
-      return redirect('AdminProfile') 
-   
-   arr=['Administrator','Teacher','Principle']
-   data={
-      "updater":request.user.username,
-      "category":request.user.category,
-      'form':form,
-      'arr':arr,
-   }
-   return render(request,'AdminNewModerator.html',data)
+  
+   return render(request,'AdminNewModerator.html')
 
 
 
 @login_required(login_url='/Admin/')
 def AdminProfilechangePassword(request):
-   if request.method== "POST":
-      form=PasswordChangeForm(user=request.user,data=request.POST)
-      if form.is_valid():
-         form.save()
-         messages.success(request,"! Password change successfully...")
-         return redirect("Admin")
-   else:
-      form=PasswordChangeForm(user=request.user)
-   data={
-      "updater":request.user.username,
-      "category":request.user.category,
-      'form':form
-   }
-   return render(request,'AdminProfilechangePassword.html',data)
+   return render(request,'AdminProfilechangePassword.html')
 
 
-# def AdminNewModerator(request):
-#    form=CostumUser()
-#    if(request.method=='POST'):
-#             form=CostumUser()
-#             form.username=request.POST.get('moderator_username')
-#             form.password=request.POST.get('moderator_password')
-#             form.category="moderator"
-#             form.save()
-#             messages.success(request,'Successfully created new moderator')
-#             return redirect('AdminProfile')
-#    data={
-#       "updater":request.user.username,
-#       "category":request.user.category,
-#       'form':form
-#    }
-#    return render(request,'AdminNewModerator.html',data)
+

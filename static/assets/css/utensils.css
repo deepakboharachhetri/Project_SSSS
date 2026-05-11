@@ -127,7 +127,7 @@
     display:none
   }
   
-  .scroll_y{
+  ._table{
     height: 500px;
     overflow-y: scroll;
   }
@@ -162,7 +162,7 @@
 .right_0{
     right:0 !important
 }
-.scroll_y_contacts_form{
+._table_contacts_form{
     height: 50px ;
     overflow-y: scroll;
 }
@@ -175,12 +175,12 @@
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat; 
 }
-.scroll_y100{
+._table100{
     max-height: 80vh;
     overflow-y: scroll;
 
   }
-  .scroll_y100::-webkit-scrollbar{
+  ._table100::-webkit-scrollbar{
     scrollbar-width: thin;
   }
   .height_500{
@@ -203,4 +203,8 @@
   }
   .height_100vh{
     height: 100vh;
+  }
+  .scroll_y_table{
+    height: 55px;
+  overflow-y: scroll;
   }

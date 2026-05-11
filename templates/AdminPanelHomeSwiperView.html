@@ -3,7 +3,7 @@
 {% block content %}
   
   <main class="container-fluid d-flex  mb-4" id="admin_panel_main">
-<div id="costum_home_div"  class="d-flex flex-column w-100 mx-3 mt-3 border">
+<div id="costum_home_div"  class="d-flex flex-column w-100 mx-3 mt-3 ">
 
       <div class="title-div d-flex justify-content-between py-3 mx-4">
             <h5 class="card-title text-capitalize fw-bold ">Swiper View</h5>
@@ -15,7 +15,7 @@
         <div class="swiper_img_select_table scroll_y100">
           
         
-          <table id="table" class="table ">
+          <table id="table" class="table border">
             <thead>
 
               <tr>
@@ -37,30 +37,28 @@
 
             <tbody id="tbody">
               {% for x in form %}
-                <tr class="tr rows" >
+                <tr class="tr rows border" >
       
 
                 
                   <td class="table_form_td swiper-change-td-position  text-capitalize col-1" scope="col-1">
                     
-                      <input class="table_form_input_height  text-center fw-bold  border swiper_position col-1" type="number" name="swiper_position" value="{{x.position}}"  required readonly>
+                     <h6 class="fw-bold">{{x.position}}</h6>
 
                   </td>
 
-                  <td class="table_form_td swiper-change-td-title text-capitalize  col-3" scope="col-3">
-
-                       <textarea class="table_form_input_height swiper_title border  fw-bold text-center" name="swiper_title"  cols="30" rows="2"  required readonly>{{x.title}}</textarea>
+                  <td class="table_form_td swiper-change-td-title text-capitalize  col-3" scope="col-3"><p class="scroll_y_table d-flex justify-content-center align-items-center ">{{x.title}}</p>
 
                   </td>
 
 
                   <td  class="table_form_td text-capitalize  col-2 " scope="col-2">
-                    <img  class="swiper_image_link admin_home_swiper_img" src="{{MEDIAL_URL}}{{x.img.url}}" alt="photo" >
+                   <a href="{{MEDIAL_URL}}{{x.img.url}}"> <img  class="swiper_image_link admin_home_swiper_img" src="{{MEDIAL_URL}}{{x.img.url}}" alt="photo" ></a>
                   </td>
 
-                  <td class="table_form_td swiper-change-td-description text-capitalize col-3" scope="col-3">
-                       <textarea class="table_form_input_height swiper_description  border " name="swiper_description" maxlength="200" minlength="40" readonly>{{x.desc}} 
-                      </textarea>
+                  <td class="table_form_td swiper-change-td-description text-capitalize  col-3" scope="col-3">
+                       <p class="d-flex justify-content-center align-items-center height_100">{{x.desc}} </p>
+                      
                   </td>
                   
                   
